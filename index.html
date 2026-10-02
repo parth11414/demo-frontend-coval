@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#090b0d">
+    <meta name="description" content="A live-window into the people, projects, and systems shaping modern engineering.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <title>devsignal — engineering intelligence</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#overview" aria-label="Devsignal overview"><span class="brand-mark">⌘</span><span>devsignal<span class="brand-period">.</span><small>ENGINEERING INTELLIGENCE</small></span></a>
+        <div class="workspace-switch"><span class="workspace-glyph">A</span><span><strong>Atlas Labs</strong><small>workspace / prod</small></span><span class="switch-caret">⌄</span></div>
+        <span class="side-label">WORKSPACE</span>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a class="nav-link active" href="#overview" data-route="overview"><span>◈</span>Overview <kbd>⌘ 1</kbd></a>
+          <a class="nav-link" href="#engineering" data-route="engineering"><span>⌬</span>Engineering <i class="nav-count">12</i></a>
+          <a class="nav-link" href="#career" data-route="career"><span>⌁</span>Career</a>
+          <a class="nav-link" href="#projects" data-route="projects"><span>▧</span>Projects <i class="nav-count" id="projectCount">12</i></a>
+          <a class="nav-link" href="#network" data-route="network"><span>⌘</span>Network</a>
+          <a class="nav-link" href="#activity" data-route="activity"><span>◷</span>Activity</a>
+        </nav>
+        <span class="side-label side-label-spaced">COLLABORATION</span>
+        <nav class="main-nav">
+          <a class="nav-link" href="#chat" data-route="chat"><span>◌</span>Chat <i class="online-dot"></i></a>
+        </nav>
+        <div class="sidebar-projects"><span class="side-label">PINNED PROJECTS <button class="tiny-action" aria-label="Explore projects" data-go="projects">＋</button></span><div id="pinnedProjects"></div></div>
+        <div class="sidebar-bottom">
+          <div class="demo-note"><span class="demo-pulse"></span><span><strong>DEMO ENVIRONMENT</strong><small>All data is generated locally</small></span></div>
+          <button class="self-profile" data-person="maya-chen"><span class="avatar avatar-maya">MC</span><span><strong>Maya Chen</strong><small>Staff engineer</small></span><span class="profile-more">···</span></button>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+          <div class="breadcrumbs"><span>ATLAS LABS</span><span class="crumb-sep">/</span><strong id="breadcrumb">OVERVIEW</strong></div>
+          <div class="top-actions"><span class="system-status"><i></i> ALL SYSTEMS NOMINAL</span><button class="top-icon" id="globalSearchButton" aria-label="Search">⌕</button><span class="top-divider"></span><span class="top-date" id="liveClock"></span><span class="avatar avatar-maya avatar-small">MC</span></div>
+        </header>
+        <div class="content-wrap">
+          <div id="viewRoot" aria-live="polite"></div>
+        </div>
+        <footer class="footer"><span>DEVSIGNAL <b>BUILD 0.9.4-DEV</b></span><span>FRONTEND DEMO <i>•</i> NO CONNECTED SERVICES</span></footer>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="modalClose" aria-label="Close dialog">×</button><div id="modalContent"></div></section></div>
+    <script src="mock-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
