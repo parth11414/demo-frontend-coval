@@ -1,0 +1,8 @@
+{
+  "name": "devsignal",
+  "description": "A live-window into the people, projects, and systems shaping modern engineering.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

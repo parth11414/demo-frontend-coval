@@ -3,12 +3,25 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f6f5f2">
+    <meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
     <meta name="description" content="A live-window into the people, projects, and systems shaping modern engineering.">
+    <meta property="og:title" content="devsignal — engineering intelligence">
+    <meta property="og:description" content="A live-window into the people, projects, and systems shaping modern engineering.">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20261004b">
     <title>devsignal — engineering intelligence</title>
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('devsignal_theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = saved || (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body>
     <!-- shared icon set (stroke icons, 24px grid) -->
@@ -55,47 +68,240 @@
       <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.4 3 7.9 7 9.5 4-1.6 7-5.1 7-9.5V6z"/><path d="m9 12 2 2 4-4"/></symbol>
       <symbol id="i-image" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.5"/><path d="m4.5 17.5 4.5-4.5 3.5 3.5 3-2.5 4 3.5"/></symbol>
       <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
     </svg>
 
     <div class="app-shell">
-      <aside class="sidebar" id="sidebar">
-        <a class="brand" href="#overview" aria-label="Devsignal overview"><span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-signal"></use></svg></span><span>devsignal<span class="brand-period">.</span><small>ENGINEERING INTELLIGENCE</small></span></a>
-        <div class="workspace-switch"><span class="workspace-glyph">A</span><span><strong>Atlas Labs</strong><small>workspace / prod</small></span><span class="switch-caret"><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg></span></div>
-        <span class="side-label">WORKSPACE</span>
-        <nav class="main-nav" aria-label="Main navigation">
-          <a class="nav-link active" href="#overview" data-route="overview"><span><svg class="icon" aria-hidden="true"><use href="#i-layout"></use></svg></span>Overview <kbd>⌘ 1</kbd></a>
-          <a class="nav-link" href="#engineering" data-route="engineering"><span><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg></span>Engineering <i class="nav-count">12</i></a>
-          <a class="nav-link" href="#career" data-route="career"><span><svg class="icon" aria-hidden="true"><use href="#i-trending-up"></use></svg></span>Career</a>
-          <a class="nav-link" href="#projects" data-route="projects"><span><svg class="icon" aria-hidden="true"><use href="#i-folder"></use></svg></span>Projects <i class="nav-count" id="projectCount">12</i></a>
-          <a class="nav-link" href="#network" data-route="network"><span><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg></span>Network</a>
-          <a class="nav-link" href="#activity" data-route="activity"><span><svg class="icon" aria-hidden="true"><use href="#i-activity"></use></svg></span>Activity</a>
-        </nav>
-        <span class="side-label side-label-spaced">COLLABORATION</span>
-        <nav class="main-nav">
-          <a class="nav-link" href="#chat" data-route="chat"><span><svg class="icon" aria-hidden="true"><use href="#i-message"></use></svg></span>Chat <i class="online-dot"></i></a>
-        </nav>
-        <div class="sidebar-projects"><span class="side-label">PINNED PROJECTS <button class="tiny-action" aria-label="Explore projects" data-go="projects"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg></button></span><div id="pinnedProjects"></div></div>
+      <!-- Mobile drawer overlay backdrop -->
+      <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+      <!-- 1. SIDEBAR -->
+      <aside class="sidebar" id="sidebar" aria-label="Application Sidebar">
+        <!-- Top: Logo, Name, Descriptor -->
+        <div class="sidebar-brand-block">
+          <a class="brand" href="#overview" data-route="overview" aria-label="devsignal home">
+            <span class="brand-mark" aria-hidden="true">
+              <svg class="icon"><use href="#i-signal"></use></svg>
+            </span>
+            <div class="brand-text">
+              <span class="brand-name">devsignal<span class="brand-dot">.</span></span>
+              <span class="brand-desc">ENGINEERING INTELLIGENCE</span>
+            </div>
+          </a>
+
+          <div class="workspace-chip">
+            <span class="workspace-avatar" aria-hidden="true">A</span>
+            <div class="workspace-meta">
+              <span class="workspace-name">Atlas Labs</span>
+              <span class="workspace-env">WORKSPACE / PROD</span>
+            </div>
+            <span class="workspace-status" title="Connected to production workspace"><i></i></span>
+          </div>
+        </div>
+
+        <!-- Navigation Scroll Area -->
+        <div class="sidebar-nav-scroll">
+          <span class="sidebar-section-heading">NAVIGATION</span>
+          <nav class="main-nav" aria-label="Primary Navigation">
+            <a class="nav-link active" href="#overview" data-route="overview">
+              <span class="nav-icon"><svg class="icon" aria-hidden="true"><use href="#i-layout"></use></svg></span>
+              <span class="nav-label">Overview</span>
+              <kbd class="nav-kbd">⌘1</kbd>
+            </a>
+            <a class="nav-link" href="#engineering" data-route="engineering">
+              <span class="nav-icon"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg></span>
+              <span class="nav-label">People</span>
+              <span class="nav-count">12</span>
+            </a>
+            <a class="nav-link" href="#projects" data-route="projects">
+              <span class="nav-icon"><svg class="icon" aria-hidden="true"><use href="#i-folder"></use></svg></span>
+              <span class="nav-label">Projects</span>
+              <span class="nav-count" id="projectCount">12</span>
+            </a>
+            <a class="nav-link" href="#network" data-route="network">
+              <span class="nav-icon"><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg></span>
+              <span class="nav-label">Network</span>
+            </a>
+            <a class="nav-link" href="#activity" data-route="activity">
+              <span class="nav-icon"><svg class="icon" aria-hidden="true"><use href="#i-activity"></use></svg></span>
+              <span class="nav-label">Activity</span>
+            </a>
+            <a class="nav-link" href="#chat" data-route="chat">
+              <span class="nav-icon"><svg class="icon" aria-hidden="true"><use href="#i-message"></use></svg></span>
+              <span class="nav-label">Messages</span>
+              <span class="online-dot" title="Local messaging active"></span>
+            </a>
+          </nav>
+
+          <!-- Pinned Repositories List -->
+          <div class="sidebar-pinned-section">
+            <div class="sidebar-section-heading">
+              <span>PINNED PROJECTS</span>
+              <button class="tiny-action" aria-label="Explore projects" data-go="projects" title="Explore all projects">
+                <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+              </button>
+            </div>
+            <div id="pinnedProjects" class="pinned-projects-list"></div>
+          </div>
+
+          <!-- Teams & Guilds Section -->
+          <div class="sidebar-pinned-section">
+            <div class="sidebar-section-heading">
+              <span>TEAMS & GUILDS</span>
+              <button class="tiny-action" aria-label="Explore network" data-go="network" title="Explore engineering graph">
+                <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"></use></svg>
+              </button>
+            </div>
+            <div class="pinned-projects-list">
+              <button class="pinned-project" data-team-jump="Applied AI">
+                <i class="pinned-dot" style="background:#06b6d4;border-color:#06b6d4"></i>
+                <span class="pinned-name">Applied AI</span>
+                <span class="pinned-stars">4 devs</span>
+              </button>
+              <button class="pinned-project" data-team-jump="Platform">
+                <i class="pinned-dot" style="background:#6366f1;border-color:#6366f1"></i>
+                <span class="pinned-name">Platform</span>
+                <span class="pinned-stars">4 devs</span>
+              </button>
+              <button class="pinned-project" data-team-jump="Developer Experience">
+                <i class="pinned-dot" style="background:#10b981;border-color:#10b981"></i>
+                <span class="pinned-name">Dev Experience</span>
+                <span class="pinned-stars">2 devs</span>
+              </button>
+              <button class="pinned-project" data-team-jump="Trust & Security">
+                <i class="pinned-dot" style="background:#f59e0b;border-color:#f59e0b"></i>
+                <span class="pinned-name">Trust & Security</span>
+                <span class="pinned-stars">1 dev</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom: Settings, Theme control, Current User Profile -->
         <div class="sidebar-bottom">
-          <div class="demo-note"><span class="demo-pulse"></span><span><strong>DEMO ENVIRONMENT</strong><small>All data is generated locally</small></span></div>
-          <button class="self-profile" data-person="maya-chen"><span class="avatar avatar-maya">MC</span><span><strong>Maya Chen</strong><small>Staff engineer</small></span><span class="profile-more"><svg class="icon" aria-hidden="true"><use href="#i-more"></use></svg></span></button>
+          <div class="sidebar-quick-actions">
+            <button class="sidebar-action-btn" id="sidebarSettingsBtn" aria-label="Open Settings" title="Settings">
+              <svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg>
+              <span>Settings</span>
+            </button>
+            <button class="sidebar-action-btn theme-toggle-btn" id="sidebarThemeToggle" aria-label="Toggle theme mode" title="Toggle dark/light theme">
+              <svg class="icon icon-theme-toggle" aria-hidden="true"><use href="#i-moon"></use></svg>
+              <span class="theme-btn-label">Theme</span>
+            </button>
+          </div>
+
+          <button class="self-profile" data-person="maya-chen" aria-label="Maya Chen Profile">
+            <span class="avatar avatar-maya">MC</span>
+            <div class="self-profile-info">
+              <strong>Maya Chen</strong>
+              <small>Staff Engineer</small>
+            </div>
+            <span class="profile-more" title="View profile" aria-hidden="true">
+              <svg class="icon"><use href="#i-chevron-right"></use></svg>
+            </span>
+          </button>
         </div>
       </aside>
 
+      <!-- 2. MAIN AREA & TOP BAR -->
       <main class="main-area">
         <header class="topbar">
-          <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation"><svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg></button>
-          <div class="breadcrumbs"><span>ATLAS LABS</span><span class="crumb-sep">/</span><strong id="breadcrumb">OVERVIEW</strong></div>
-          <div class="top-actions"><span class="system-status"><i></i> ALL SYSTEMS NOMINAL</span><button class="top-icon" id="globalSearchButton" aria-label="Search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg></button><span class="top-divider"></span><span class="top-date" id="liveClock"></span><span class="avatar avatar-maya avatar-small">MC</span></div>
+          <!-- Left: Mobile Menu & Breadcrumbs -->
+          <div class="topbar-left">
+            <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation menu">
+              <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
+            </button>
+            <div class="breadcrumbs">
+              <span class="breadcrumb-root">ATLAS LABS</span>
+              <span class="crumb-sep">/</span>
+              <strong id="breadcrumb">OVERVIEW</strong>
+            </div>
+          </div>
+
+          <!-- Center: Global Search Bar Trigger with ⌘K & Sleek Dark Mode Switch -->
+          <div class="topbar-center">
+            <button class="topbar-search-btn" id="globalSearchButton" aria-label="Search directory (Press ⌘K)">
+              <span class="search-btn-icon" aria-hidden="true">
+                <svg class="icon"><use href="#i-search"></use></svg>
+              </span>
+              <span class="search-btn-text">Search directory, projects, teams…</span>
+              <span class="search-btn-kbd" aria-hidden="true">
+                <kbd>⌘</kbd><kbd>K</kbd>
+              </span>
+            </button>
+
+            <!-- Sleek Dark Mode Toggle Switch -->
+            <button class="theme-switch-control" id="themeSwitchControl" role="switch" aria-checked="false" aria-label="Toggle dark mode" title="Toggle dark mode">
+              <span class="switch-glyph switch-sun" aria-hidden="true">
+                <svg class="icon"><use href="#i-sun"></use></svg>
+              </span>
+              <span class="switch-track" aria-hidden="true">
+                <span class="switch-thumb">
+                  <svg class="icon thumb-sun"><use href="#i-sun"></use></svg>
+                  <svg class="icon thumb-moon"><use href="#i-moon"></use></svg>
+                </span>
+              </span>
+              <span class="switch-glyph switch-moon" aria-hidden="true">
+                <svg class="icon"><use href="#i-moon"></use></svg>
+              </span>
+              <span class="switch-mode-text" id="switchModeText">Dark</span>
+            </button>
+          </div>
+
+          <!-- Right: System Status, Notifications, Theme Toggle, User Avatar -->
+          <div class="topbar-right">
+            <span class="system-status" title="All engineering systems operational">
+              <i></i> NOMINAL
+            </span>
+
+            <button class="top-icon topbar-notifications" id="notificationsButton" aria-label="Notifications" title="Recent activity notifications (3 unread)">
+              <svg class="icon" aria-hidden="true"><use href="#i-bell"></use></svg>
+              <span class="notification-badge" aria-hidden="true"></span>
+            </button>
+
+            <button class="top-icon topbar-theme-toggle" id="themeToggle" aria-label="Toggle dark/light theme" title="Toggle theme">
+              <svg class="icon theme-icon-current" aria-hidden="true"><use href="#i-moon"></use></svg>
+            </button>
+
+            <span class="top-divider" aria-hidden="true"></span>
+
+            <span class="top-date" id="liveClock" aria-label="Current date"></span>
+
+            <button class="topbar-user-btn" data-person="maya-chen" aria-label="Maya Chen Profile" title="Maya Chen (Staff Engineer)">
+              <span class="avatar avatar-maya avatar-small">MC</span>
+            </button>
+          </div>
         </header>
+
+        <!-- 3. MAIN CONTENT CONTAINER -->
         <div class="content-wrap">
           <div id="viewRoot" aria-live="polite"></div>
         </div>
-        <footer class="footer"><span>DEVSIGNAL <b>BUILD 0.9.4-DEV</b></span><span>FRONTEND DEMO <i>•</i> NO CONNECTED SERVICES</span></footer>
+
+        <footer class="footer">
+          <span>DEVSIGNAL <b>v1.0</b></span>
+          <span>ENGINEERING INTELLIGENCE <i>•</i> ATLAS LABS</span>
+        </footer>
       </main>
     </div>
+
+    <!-- Toast Notification Container -->
     <div class="toast" id="toast" role="status"></div>
-    <div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="modalClose" aria-label="Close dialog"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button><div id="modalContent"></div></section></div>
-    <script src="mock-data.js"></script>
-    <script src="app.js"></script>
+
+    <!-- Accessible Modal Container -->
+    <div class="modal-backdrop" id="modalBackdrop" hidden>
+      <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="modalClose" aria-label="Close dialog">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+        <div id="modalContent"></div>
+      </section>
+    </div>
+
+    <script src="mock-data.js?v=20261004b"></script>
+    <script src="app.js?v=20261004b"></script>
   </body>
 </html>

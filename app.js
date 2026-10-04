@@ -87,6 +87,7 @@
     document.querySelectorAll("[data-route]").forEach(link => link.classList.toggle("active",link.dataset.route === activeRoute));
     $("#breadcrumb").textContent = activeRoute === "profile" ? `PEOPLE / ${person(activePersonId).username.toUpperCase()}` : getPageTitle(activeRoute);
     $("#sidebar").classList.remove("sidebar-open");
+    $("#sidebarBackdrop")?.classList.remove("visible");
     const pages = {overview:renderOverview,engineering:renderEngineering,career:renderCareer,projects:renderProjects,network:renderNetwork,activity:renderActivity,chat:renderChat,profile:renderProfile};
     root.innerHTML = `<section class="page-view">${pages[activeRoute]()}</section>`;
     if (activeRoute === "engineering") applyDirectoryFilter();
@@ -166,17 +167,400 @@
   }
   function renderOverview() {
     const user = person(activePersonId);
-    const featured = projects.filter(item=>user.projects.includes(item.id)).slice(0,3);
-    return `${sectionHeader("ENGINEERING SIGNAL / 01",`Good morning, ${esc(user.name.split(" ")[0])} <span class="heading-caret">${icon("sparkles")}</span>`,"A live-window into the people, projects, and systems shaping your engineering org.",`<button class="button button-quiet" data-go="engineering">${icon("users")}&nbsp; Explore team</button>`)}
-      ${profileHero(user)}
-      <div class="overview-grid"><div class="overview-main">${githubCard(user,true)}
-        <div class="panel project-overview"><div class="panel-heading"><div><span class="eyebrow">ACTIVE REPOSITORIES</span><h2>Current projects <span class="count-badge">${featured.length}</span></h2></div><button class="text-link" data-go="projects">ALL PROJECTS ${icon("arrow-up-right")}</button></div><div class="project-list">${featured.map(item=>`<button class="repo-row" data-project="${item.id}"><span class="repo-icon">${icon("repo")}</span><span class="repo-row-main"><strong>${esc(item.path.split("/")[1])}</strong><small>${esc(item.description)}</small></span><span class="repo-row-stars">${icon("star")} ${item.stars}</span><span class="row-arrow">${icon("arrow-up-right")}</span></button>`).join("")}</div></div>
-        <div class="panel activity-preview"><div class="panel-heading"><div><span class="eyebrow">RECENT SIGNAL</span><h2>What’s moving</h2></div><button class="text-link" data-go="activity">VIEW ACTIVITY ${icon("arrow-up-right")}</button></div><div class="activity-row"><span class="activity-icon activity-green">${icon("git-pr")}</span><div><strong>${esc(user.activity)}</strong><small>in <button data-project="${user.projects[0]}">${esc(project(user.projects[0]).path.split("/")[1])}</button> · 18 min ago</small></div><span class="activity-state">MERGED</span></div><div class="activity-row"><span class="activity-icon activity-purple">${icon("sparkles")}</span><div><strong>Reviewed retrieval benchmark results</strong><small>with ${person(user.id==="maya-chen"?"evan-brooks":"maya-chen").name} · 1h ago</small></div><span class="activity-state">REVIEW</span></div></div>
-      </div><aside class="overview-aside">${scoreCard(user)}
-        <article class="panel leetcode-card"><div class="panel-heading"><div><span class="eyebrow">LEETCODE / PROBLEM SOLVING</span><h2>Pattern recognition.</h2></div><span class="leetcode-mark">LC</span></div><div class="leetcode-score"><strong>${user.leetcode.rating.toLocaleString()}</strong><span>CONTEST RATING <i>${icon("trending-up")} 36</i></span></div><div class="problem-total"><strong>${user.leetcode.solved}</strong><span>problems<br>solved</span></div><div class="difficulty-row"><span>Easy <b>${user.leetcode.easy}</b></span><i><em style="width:${user.leetcode.easy/user.leetcode.solved*100}%"></em></i></div><div class="difficulty-row medium"><span>Medium <b>${user.leetcode.medium}</b></span><i><em style="width:${user.leetcode.medium/user.leetcode.solved*100}%"></em></i></div><div class="difficulty-row hard"><span>Hard <b>${user.leetcode.hard}</b></span><i><em style="width:${user.leetcode.hard/user.leetcode.solved*100}%"></em></i></div><button class="text-link wide-link" data-go="engineering">VIEW PROBLEM HISTORY ${icon("arrow-up-right")}</button></article>
-        <article class="panel skills-card"><div class="panel-heading"><div><span class="eyebrow">TECHNICAL TOOLKIT</span><h2>Fluent in the stack.</h2></div><button class="link-arrow" data-go="engineering">${icon("arrow-up-right")}</button></div><div class="skill-cloud">${user.skills.slice(0,5).map(([name,level],index)=>`<span class="skill-chip skill-${index%5}">${esc(name)} <b>${level}</b></span>`).join("")}</div></article>
-      </aside></div>
-      <div class="panel featured-projects"><div class="panel-heading"><div><span class="eyebrow">IN THE WORKS</span><h2>Building with ${user.projects.length} connected projects.</h2></div><button class="button button-outline" data-go="projects">Open project explorer <span>${icon("arrow-up-right")}</span></button></div><div class="project-grid compact-project-grid">${featured.map(projectCard).join("")}</div></div>`;
+    const userProjects = user.projects.map(project).filter(Boolean);
+    const collaborators = [...new Set(userProjects.flatMap(proj => proj.contributors.map(([id]) => id)))].filter(id => id !== user.id);
+
+    const timelineEvents = [
+      {
+        icon: "git-pr",
+        badge: "MERGED",
+        badgeColor: "green",
+        person: user,
+        projectId: user.projects[0] || "neural-search",
+        projectName: project(user.projects[0]) ? project(user.projects[0]).path.split("/")[1] : "neural-search",
+        time: "18m ago",
+        title: user.activity || "Pushed to neural-search",
+        desc: "Merged PR #418: Improved cache invalidation for hybrid keyword & vector queries."
+      },
+      {
+        icon: "check",
+        badge: "MERGED",
+        badgeColor: "green",
+        person: person("leo-martinez") || user,
+        projectId: "infra-core",
+        projectName: "infra-core",
+        time: "35m ago",
+        title: "Merged infra-core #418 into main",
+        desc: "Canary is green across all three regions. Workload identity policies verified."
+      },
+      {
+        icon: "sparkles",
+        badge: "EVAL",
+        badgeColor: "purple",
+        person: person("evan-brooks") || user,
+        projectId: "neural-search",
+        projectName: "neural-search",
+        time: "1h ago",
+        title: "Updated ranking evaluation suite",
+        desc: "The reranker eval cleared 0.84 NDCG on the holdout set with long-tail holding at +11%."
+      },
+      {
+        icon: "git-branch",
+        badge: "RELEASE",
+        badgeColor: "blue",
+        person: person("priya-nair") || user,
+        projectId: "signal-board",
+        projectName: "signal-board",
+        time: "2h ago",
+        title: "Shipped the new signal-board",
+        desc: "Real-time engineering health surface with accessibility enhancements and side-by-side view."
+      },
+      {
+        icon: "message",
+        badge: "REVIEW",
+        badgeColor: "amber",
+        person: person("jonah-reed") || user,
+        projectId: "infra-core",
+        projectName: "infra-core",
+        time: "4h ago",
+        title: "Reviewed 3 pull requests",
+        desc: "Pushed cache invalidation notes to the RFC and signed off on staging deployment plan."
+      }
+    ];
+
+    return `
+      <!-- 1. GREETING -->
+      <header class="overview-greeting">
+        <div class="overview-greeting-text">
+          <span class="eyebrow">ENGINEERING INTELLIGENCE</span>
+          <h1 class="overview-heading">Good morning, ${esc(user.name.split(" ")[0])}</h1>
+          <p class="overview-subtext">Engineering intelligence for your team.</p>
+        </div>
+        <div class="overview-greeting-actions">
+          <button class="button button-quiet" data-go="engineering">${icon("users")}&nbsp; Explore team</button>
+        </div>
+      </header>
+
+      <!-- 2. PROFILE HERO (Visual Anchor) -->
+      <article class="overview-profile-hero" aria-label="Engineering Profile Hero">
+        <div class="hero-header-row">
+          <div class="hero-identity-group">
+            <div class="hero-avatar-container">
+              ${avatar(user)}
+              <span class="hero-presence-indicator ${user.active ? 'online' : ''}" title="${user.active ? 'Online now' : 'Last active 2h ago'}"></span>
+            </div>
+            <div class="hero-identity-copy">
+              <div class="hero-name-badge-row">
+                <h2>${esc(user.name)}</h2>
+                <span class="verified-icon" title="Identity verified">${icon("check")}</span>
+                <span class="hero-status-pill ${user.active ? 'online' : ''}">
+                  <i></i>${user.active ? 'Online now' : 'Away · last active 2h ago'}
+                </span>
+              </div>
+              <div class="hero-meta-inline">
+                <span>${icon("briefcase")}&nbsp; ${esc(user.role)} <small>at</small> ${esc(user.company)}</span>
+                <span class="meta-sep">·</span>
+                <span>${icon("users")}&nbsp; ${esc(user.team)}</span>
+                <span class="meta-sep">·</span>
+                <span>${icon("map-pin")}&nbsp; ${esc(user.location)}</span>
+                <span class="meta-sep">·</span>
+                <span>${icon("clock")}&nbsp; ${esc(user.experience)} exp</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-action-buttons">
+            <button class="button button-quiet" data-message-person="${esc(user.id)}">${icon("message")}&nbsp; Message</button>
+            <button class="button button-quiet" data-copy-profile="${esc(user.id)}">${icon("plus")}&nbsp; Connect</button>
+            <button class="button button-green" data-person="${esc(user.id)}">${icon("user")}&nbsp; Full profile</button>
+          </div>
+        </div>
+        <p class="hero-bio-text">${esc(user.bio)}</p>
+        <div class="hero-footer-bar">
+          <div class="hero-stats-group">
+            <div class="hero-stat-cell">
+              <span class="stat-cell-label">GITHUB HANDLE</span>
+              <span class="stat-cell-val">@${esc(user.username)}</span>
+            </div>
+            <div class="stat-cell-divider"></div>
+            <div class="hero-stat-cell">
+              <span class="stat-cell-label">TECH SIGNAL</span>
+              <span class="stat-cell-val">${user.score} <small>/ 100</small></span>
+            </div>
+            <div class="stat-cell-divider"></div>
+            <div class="hero-stat-cell">
+              <span class="stat-cell-label">SOLVED LC</span>
+              <span class="stat-cell-val">${user.leetcode.solved} <small>problems</small></span>
+            </div>
+            <div class="stat-cell-divider"></div>
+            <div class="hero-stat-cell">
+              <span class="stat-cell-label">STREAK</span>
+              <span class="stat-cell-val">${user.github.streak} <small>days</small></span>
+            </div>
+          </div>
+          <div class="hero-active-projects">
+            <span class="stat-cell-label">CURRENT REPOSITORIES:</span>
+            <div class="hero-repo-links">
+              ${userProjects.slice(0, 3).map(proj => `
+                <button class="hero-repo-chip" data-project="${proj.id}" title="${esc(proj.description)}">
+                  <span class="repo-glyph">${icon("repo")}</span>
+                  <span>${esc(proj.path.split("/")[1])}</span>
+                  <span class="stars">${icon("star")}&nbsp;${proj.stars}</span>
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3. METRICS ROW -->
+      <section class="overview-metrics-grid" aria-label="Key Engineering Metrics">
+        <!-- Metric 1: GitHub contributions -->
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-card-label">GITHUB CONTRIBUTIONS</span>
+            <span class="metric-trend-tag positive">${icon("trending-up")} +18%</span>
+          </div>
+          <div class="metric-number-row">
+            <strong class="metric-hero-num" data-count="${user.github.contributions}">${user.github.contributions}</strong>
+          </div>
+          <div class="metric-card-foot">
+            <span class="metric-foot-desc">${user.github.streak}d streak · ${user.github.prs} merged PRs</span>
+            <div class="metric-mini-chart">
+              ${sparkline("#4f46e5", [24, 35, 28, 49, 40, 60, 52, 74, 62, 85, 77, 91])}
+            </div>
+          </div>
+        </article>
+
+        <!-- Metric 2: Technical signal -->
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-card-label">TECHNICAL SIGNAL</span>
+            <span class="metric-trend-tag positive">${icon("trending-up")} +4.2%</span>
+          </div>
+          <div class="metric-number-row">
+            <strong class="metric-hero-num" data-count="${user.score}">${user.score}</strong>
+            <span class="metric-hero-unit">/100</span>
+          </div>
+          <div class="metric-card-foot">
+            <span class="metric-foot-desc">Top 6% across Atlas Labs</span>
+            <span class="metric-badge-quiet">LEADERSHIP</span>
+          </div>
+        </article>
+
+        <!-- Metric 3: Connected Repositories -->
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-card-label">CONNECTED REPOS</span>
+            <span class="metric-badge-quiet">SHIPPING</span>
+          </div>
+          <div class="metric-number-row">
+            <strong class="metric-hero-num" data-count="${userProjects.length}">${userProjects.length}</strong>
+            <span class="metric-hero-unit">repos</span>
+          </div>
+          <div class="metric-card-foot">
+            <span class="metric-foot-desc">All production builds healthy</span>
+            <span class="tiny-square"></span>
+          </div>
+        </article>
+
+        <!-- Metric 4: Network Collaborators -->
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-card-label">COLLABORATORS</span>
+            <span class="metric-trend-tag positive">+2 new</span>
+          </div>
+          <div class="metric-number-row">
+            <strong class="metric-hero-num" data-count="${collaborators.length}">${collaborators.length}</strong>
+            <span class="metric-hero-unit">peers</span>
+          </div>
+          <div class="metric-card-foot">
+            <span class="metric-foot-desc">Across 3 active squads</span>
+            <div class="metric-avatar-stack">
+              ${collaborators.slice(0, 3).map(id => avatar(person(id), true)).join("")}
+            </div>
+          </div>
+        </article>
+
+        <!-- Metric 5: Recent Velocity -->
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-card-label">RECENT VELOCITY</span>
+            <span class="metric-trend-tag positive">${icon("check")} ACTIVE</span>
+          </div>
+          <div class="metric-number-row">
+            <strong class="metric-hero-num" data-count="${user.github.prs}">${user.github.prs}</strong>
+            <span class="metric-hero-unit">PRs</span>
+          </div>
+          <div class="metric-card-foot">
+            <span class="metric-foot-desc">${user.github.issues} issues closed · 9.2h SLA</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- 4. CURRENT PROJECTS -->
+      <section class="overview-projects-section" aria-label="Current Projects">
+        <div class="overview-section-title-bar">
+          <div>
+            <span class="eyebrow">REPOSITORIES & SYSTEMS</span>
+            <h2 class="overview-section-title">Current projects <span class="count-badge">${userProjects.length}</span></h2>
+          </div>
+          <button class="text-link" data-go="projects">EXPLORE ALL 12 REPOSITORIES ${icon("arrow-up-right")}</button>
+        </div>
+        <div class="overview-projects-grid">
+          ${userProjects.map(item => `
+            <article class="overview-project-card" data-project="${item.id}" tabindex="0" role="button" aria-label="Open ${esc(item.id)} project details">
+              <div class="opc-top">
+                <div class="opc-name-box">
+                  <span class="opc-repo-icon">${icon("repo")}</span>
+                  <div>
+                    <h3 class="opc-title">${esc(item.id)}</h3>
+                    <span class="opc-path">${esc(item.path)}</span>
+                  </div>
+                </div>
+                <span class="project-status ${item.status}"><i></i>${esc(item.status)}</span>
+              </div>
+              <p class="opc-description">${esc(item.description)}</p>
+              <div class="opc-tech-tags">
+                ${item.stack.map(tech => `<span class="opc-tag">${esc(tech)}</span>`).join("")}
+              </div>
+              <div class="opc-footer">
+                <div class="opc-contributors-box">
+                  <span class="opc-footer-label">CONTRIBUTORS</span>
+                  <div class="opc-avatar-list">
+                    ${item.contributors.slice(0, 4).map(([id, pct]) => `
+                      <span class="opc-avatar-wrap" title="${esc(person(id)?.name || id)} · ${pct}%">
+                        ${avatar(person(id), true)}
+                      </span>
+                    `).join("")}
+                    ${item.contributors.length > 4 ? `<span class="opc-more-count">+${item.contributors.length - 4}</span>` : ""}
+                  </div>
+                </div>
+                <div class="opc-stats-row">
+                  <span class="opc-stat">${icon("star")}&nbsp;${item.stars}</span>
+                  <span class="opc-stat-sep">·</span>
+                  <span class="opc-stat">${icon("clock")}&nbsp;${esc(item.updated)}</span>
+                </div>
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <!-- 5 & 6. LOWER GRID: RECENT ACTIVITY TIMELINE & TECHNICAL SKILLS PROFILE -->
+      <div class="overview-lower-grid">
+        <!-- 5. ACTIVITY TIMELINE -->
+        <article class="overview-timeline-card" aria-label="Recent Engineering Activity">
+          <div class="overview-card-heading">
+            <div>
+              <span class="eyebrow">ACTIVITY STREAM</span>
+              <h2 class="overview-card-title">Recent activity</h2>
+            </div>
+            <button class="text-link" data-go="activity">VIEW ALL STREAM ${icon("arrow-up-right")}</button>
+          </div>
+          <div class="overview-timeline-list">
+            ${timelineEvents.map((item, idx) => `
+              <div class="timeline-row ${idx === 0 ? 'is-latest' : ''}">
+                <div class="timeline-track">
+                  <span class="timeline-bullet">${icon(item.icon)}</span>
+                  ${idx < timelineEvents.length - 1 ? '<span class="timeline-line"></span>' : ''}
+                </div>
+                <div class="timeline-content">
+                  <div class="timeline-meta-bar">
+                    <span class="timeline-badge badge-${item.badgeColor}">${item.badge}</span>
+                    <span class="timeline-meta-text">
+                      <button class="person-chip" data-person="${item.person.id}">${avatar(item.person, true)} <span>${esc(item.person.name)}</span></button>
+                      <span>·</span>
+                      <button class="timeline-proj-link" data-project="${item.projectId}">${esc(item.projectName)}</button>
+                      <span>·</span>
+                      <time>${item.time}</time>
+                    </span>
+                  </div>
+                  <h4 class="timeline-title">${esc(item.title)}</h4>
+                  <p class="timeline-desc">${esc(item.desc)}</p>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+
+        <!-- 6. SKILLS / TECHNICAL PROFILE -->
+        <article class="overview-skills-card" aria-label="Technical Skills and Profile">
+          <div class="overview-card-heading">
+            <div>
+              <span class="eyebrow">TECHNICAL PROFILE</span>
+              <h2 class="overview-card-title">Skills & competency</h2>
+            </div>
+            <button class="text-link" data-go="engineering">VIEW DIRECTORY ${icon("arrow-up-right")}</button>
+          </div>
+
+          <!-- Skills breakdown -->
+          <div class="skills-section-block">
+            <span class="skills-subhead">CORE TECHNICAL COMPETENCIES</span>
+            <div class="skills-bars-list">
+              ${user.skills.map(([name, value]) => `
+                <div class="skill-meter-row">
+                  <div class="skill-meter-labels">
+                    <span class="skill-meter-name">${esc(name)}</span>
+                    <span class="skill-meter-val">${value}%</span>
+                  </div>
+                  <div class="skill-meter-track">
+                    <div class="skill-meter-fill" style="width: ${value}%"></div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Language distribution -->
+          <div class="skills-section-block">
+            <span class="skills-subhead">LANGUAGE DISTRIBUTION</span>
+            <div class="language-progress-stacked" role="img" aria-label="Language distribution">
+              ${user.languages.map(([name, pct]) => `
+                <div class="lang-bar-segment lang-${name.toLowerCase().replace(/[^a-z]/g, '')}" style="width: ${pct}%" title="${esc(name)}: ${pct}%"></div>
+              `).join("")}
+            </div>
+            <div class="language-legend-row">
+              ${user.languages.map(([name, pct]) => `
+                <span class="lang-legend-item">
+                  <i class="lang-color-dot lang-${name.toLowerCase().replace(/[^a-z]/g, '')}"></i>
+                  <span class="lang-name">${esc(name)}</span>
+                  <span class="lang-pct">${pct}%</span>
+                </span>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Problem Solving / LeetCode Signal -->
+          <div class="skills-section-block">
+            <span class="skills-subhead">PROBLEM SOLVING SIGNAL</span>
+            <div class="leetcode-overview-box">
+              <div class="leetcode-header-line">
+                <span class="leetcode-pill">CONTEST RATING: <b>${user.leetcode.rating.toLocaleString()}</b></span>
+                <span class="metric-trend-tag positive">${icon("trending-up")} Top 4.8%</span>
+              </div>
+              <div class="leetcode-numbers-row">
+                <div class="lc-stat">
+                  <span class="lc-num">${user.leetcode.solved}</span>
+                  <span class="lc-lbl">SOLVED</span>
+                </div>
+                <div class="lc-stat">
+                  <span class="lc-num text-green">${user.leetcode.easy}</span>
+                  <span class="lc-lbl">EASY</span>
+                </div>
+                <div class="lc-stat">
+                  <span class="lc-num text-amber">${user.leetcode.medium}</span>
+                  <span class="lc-lbl">MEDIUM</span>
+                </div>
+                <div class="lc-stat">
+                  <span class="lc-num text-danger">${user.leetcode.hard}</span>
+                  <span class="lc-lbl">HARD</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    `;
   }
   function developerCard(user) {
     return `<article class="developer-card"><div class="developer-card-top">${avatar(user)}<span class="presence-label ${user.active?"is-online":""}"><i></i>${user.active?"ONLINE":"AWAY"}</span></div><button class="developer-name" data-person="${user.id}">${esc(user.name)} <span>${icon("arrow-up-right")}</span></button><div class="developer-role">${esc(user.role)} <span>·</span> ${esc(user.team)}</div><p>${esc(user.bio)}</p><div class="developer-tags">${user.skills.slice(0,3).map(([name])=>pill(name)).join("")}</div><div class="developer-card-bottom"><span>${icon("signal")} ${user.score} SIGNAL</span><button data-message-person="${user.id}">MESSAGE ${icon("arrow-right")}</button></div></article>`;
@@ -299,11 +683,63 @@
     const label=$("#zoomLabel");if(label)label.textContent=`${Math.round(graphZoom*100)}%`;
   }
 
+  function closeSidebar() {
+    $("#sidebar")?.classList.remove("sidebar-open");
+    $("#sidebarBackdrop")?.classList.remove("visible");
+  }
+
+  function toggleSidebar() {
+    const isOpen = $("#sidebar")?.classList.toggle("sidebar-open");
+    $("#sidebarBackdrop")?.classList.toggle("visible", Boolean(isOpen));
+  }
+
+  function updateThemeDisplay(theme) {
+    document.querySelectorAll(".theme-icon-current use, .icon-theme-toggle use").forEach(use => {
+      use.setAttribute("href", theme === "dark" ? "#i-sun" : "#i-moon");
+    });
+    document.querySelectorAll(".theme-select-btn").forEach(btn => {
+      btn.classList.toggle("selected", btn.dataset.themeChoice === theme);
+    });
+    const switchControl = $("#themeSwitchControl");
+    if (switchControl) {
+      switchControl.setAttribute("aria-checked", theme === "dark" ? "true" : "false");
+      switchControl.classList.toggle("is-dark", theme === "dark");
+      switchControl.setAttribute("title", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+      const modeText = $("#switchModeText");
+      if (modeText) modeText.textContent = theme === "dark" ? "Light" : "Dark";
+    }
+  }
+
+  function toggleTheme(explicit) {
+    const current = document.documentElement.getAttribute("data-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = explicit || (current === "dark" ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("devsignal_theme", next); } catch(e){}
+    updateThemeDisplay(next);
+    showToast(`Switched to ${next} theme.`);
+  }
+
+  function openNotifications() {
+    closeSidebar();
+    openModal(`<span class="eyebrow">ACTIVITY NOTIFICATIONS</span><h2 class="modal-title" id="modalTitle">Recent Signals & Activity</h2><div class="notifications-list"><button class="notification-item unread" data-go="activity"><span class="notif-icon notif-icon-pr">${icon("git-pr")}</span><div class="notif-content"><strong>PR #418 merged into neural-search</strong><p>Improved cache invalidation for hybrid queries merged by Maya Chen.</p><small>18m ago · Engineering</small></div><span class="notif-badge">MERGED</span></button><button class="notification-item unread" data-route="chat"><span class="notif-icon notif-icon-msg">${icon("message")}</span><div class="notif-content"><strong>New message in #proj-neural</strong><p>Evan Brooks: “Good call — I’ll take a look at the benchmark results.”</p><small>42m ago · Collaboration</small></div><span class="notif-badge">NEW</span></button><button class="notification-item" data-person="elena-rostova"><span class="notif-icon notif-icon-user">${icon("user")}</span><div class="notif-content"><strong>Elena Rostova updated agent-runtime</strong><p>Pushed 3 commits to branch feature/bounded-retry.</p><small>3h ago · Platform</small></div><span class="notif-state">PUSH</span></button></div>`);
+  }
+
+  function openSettings() {
+    closeSidebar();
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+    openModal(`<span class="eyebrow">WORKSPACE PREFERENCES</span><h2 class="modal-title" id="modalTitle">Settings & Configuration</h2><div class="settings-modal-grid"><div class="settings-group"><span class="eyebrow">DISPLAY THEME</span><div class="settings-row"><div><strong>Appearance Mode</strong><p>Switch between light studio canvas and high-contrast dark mode.</p></div><div class="theme-choice-buttons"><button class="button button-quiet theme-select-btn ${currentTheme==='light'?'selected':''}" data-theme-choice="light">${icon("sun")}&nbsp; Light</button><button class="button button-quiet theme-select-btn ${currentTheme==='dark'?'selected':''}" data-theme-choice="dark">${icon("moon")}&nbsp; Dark</button></div></div></div><div class="settings-group"><span class="eyebrow">ACTIVE WORKSPACE</span><div class="settings-row"><div><strong>Organization</strong><p>Atlas Labs · Engineering Intelligence Platform (Production)</p></div><span class="tag">PRODUCTION</span></div><div class="settings-row"><div><strong>Practitioner Profile</strong><p>Maya Chen · Staff Engineer (@mayachen)</p></div><button class="button button-quiet" data-person="maya-chen">View Profile</button></div></div><div class="settings-group"><span class="eyebrow">KEYBOARD SHORTCUTS</span><div class="settings-shortcuts-list"><div class="shortcut-row"><span>Global Search</span><kbd>⌘ K</kbd></div><div class="shortcut-row"><span>Overview</span><kbd>⌘ 1</kbd></div><div class="shortcut-row"><span>Dismiss Dialog / Drawer</span><kbd>Esc</kbd></div><div class="shortcut-row"><span>Send Message</span><kbd>Enter</kbd></div></div></div></div>`);
+  }
+
   document.addEventListener("click",event=>{
-    const route=event.target.closest("[data-route]");if(route){event.preventDefault();navigate(route.dataset.route);return;}
-    const go=event.target.closest("[data-go]");if(go){navigate(go.dataset.go);return;}
+    if(event.target.closest("#sidebarBackdrop")){closeSidebar();return;}
+    if(event.target.closest("#themeToggle") || event.target.closest("#sidebarThemeToggle") || event.target.closest("#themeSwitchControl")){toggleTheme();return;}
+    if(event.target.closest("[data-theme-choice]")){toggleTheme(event.target.closest("[data-theme-choice]").dataset.themeChoice);return;}
+    if(event.target.closest("#notificationsButton")){openNotifications();return;}
+    if(event.target.closest("#sidebarSettingsBtn") || event.target.closest("#settingsBtn")){openSettings();return;}
+    const route=event.target.closest("[data-route]");if(route){event.preventDefault();closeSidebar();navigate(route.dataset.route);return;}
+    const go=event.target.closest("[data-go]");if(go){closeSidebar();navigate(go.dataset.go);return;}
     const collapse=event.target.closest("[data-collapse]");if(collapse){const branch=$(`[data-branch="${collapse.dataset.collapse}"]`);if(branch)branch.hidden=!branch.hidden;collapse.innerHTML=branch?.hidden?icon("plus"):icon("minus");collapse.setAttribute("aria-label",`${branch?.hidden?"Expand":"Collapse"} branch`);return;}
-    const profile=event.target.closest("[data-person]");if(profile){closeModal();goProfile(profile.dataset.person);return;}
+    const profile=event.target.closest("[data-person]");if(profile){closeModal();closeSidebar();goProfile(profile.dataset.person);return;}
     const repo=event.target.closest("[data-project]");if(repo){const item=project(repo.dataset.project);if(item){projectReturnHash=location.hash.startsWith("#project/")?"#projects":location.hash||"#overview";history.pushState(null,"",`#project/${item.id}`);showProject(item);}return;}
     const personMessage=event.target.closest("[data-message-person]");if(personMessage){const recipient=personMessage.dataset.messagePerson;selectedConversation=conversations.find(item=>item.kind==="direct"&&item.people.includes(recipient))?.id||"dm-priya";navigate("chat");return;}
     const connect=event.target.closest("[data-copy-profile]");if(connect){showToast(`Connection request staged locally for ${person(connect.dataset.copyProfile).name}.`);return;}
@@ -356,18 +792,19 @@
     typingTimer=setTimeout(()=>{const selected=conversations.find(item=>item.id===replyTo);if(!selected)return;const replyId=selected.people.find(id=>id!=="maya-chen")||"maya-chen",replies=["Good call — I’ll take a look.","Makes sense. I’ll add a note to the thread.","Thanks for the context. Let’s sync on the next pass.","On it — I’ll share an update here shortly."];(chatMessages[replyTo]||[]).push({sender:replyId,text:replies[Math.floor(Math.random()*replies.length)],mine:false,time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})});typing=false;if(selectedConversation===replyTo)render();},1450);
   });
   document.addEventListener("keydown",event=>{
-    if(event.key==="Escape"){closeModal();$("#sidebar").classList.remove("sidebar-open");}
+    if(event.key==="Escape"){closeModal();closeSidebar();}
     if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==="k"){event.preventDefault();openSearch();}
-    if((event.key==="Enter"||event.key===" ")&&event.target.matches(".org-node")){event.preventDefault();goProfile(event.target.dataset.person);}
+    if((event.key==="Enter"||event.key===" ")&&event.target.matches(".org-node")){event.preventDefault();closeSidebar();goProfile(event.target.dataset.person);}
     if(event.target.id==="messageInput"&&event.key==="Enter"&&!event.shiftKey){event.preventDefault();$("#composer")?.requestSubmit();}
   });
-  window.addEventListener("popstate",()=>{if(!$("#modalBackdrop").hidden)closeModal();render();});
+  window.addEventListener("popstate",()=>{if(!$("#modalBackdrop").hidden)closeModal();closeSidebar();render();});
   $("#modalClose").addEventListener("click",closeModal);
-  $("#mobileMenu").addEventListener("click",()=>$("#sidebar").classList.toggle("sidebar-open"));
+  $("#mobileMenu")?.addEventListener("click",toggleSidebar);
   $("#liveClock").textContent=new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"2-digit"}).toUpperCase();
   $("#projectCount").textContent=projects.length;
-  $("#pinnedProjects").innerHTML=projects.slice(0,4).map(item=>`<button class="pinned-project" data-project="${item.id}"><i class="pinned-dot"></i>${esc(item.id)}<span>${item.stars}</span></button>`).join("");
+  $("#pinnedProjects").innerHTML=projects.map(item=>`<button class="pinned-project" data-project="${item.id}" title="${esc(item.description)}"><i class="pinned-dot ${item.status}"></i><span class="pinned-name">${esc(item.id)}</span><span class="pinned-stars">${icon("star")}&nbsp;${item.stars}</span></button>`).join("");
   render();
+  updateThemeDisplay(document.documentElement.getAttribute("data-theme")||"light");
   if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost" || location.hostname==="127.0.0.1")) {
     window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(error=>console.error("Devsignal offline caching could not be enabled.",error)));
   }
