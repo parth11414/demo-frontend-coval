@@ -1,12 +1,17 @@
 {
-  "name": "devsignal — engineering intelligence",
-  "short_name": "devsignal",
-  "description": "A live-window into the people, projects, and systems shaping modern engineering.",
+  "name": "COVAL — Engineering Intelligence",
+  "short_name": "COVAL",
+  "description": "Engineering intelligence platform for modern engineering teams and systems.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f6f5f2",
-  "theme_color": "#f6f5f2",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
   "icons": [
+    {
+      "src": "coval-logo.jpg",
+      "sizes": "1024x1024",
+      "type": "image/jpeg"
+    },
     {
       "src": "icon.svg",
       "sizes": "any",

@@ -1,7 +1,7 @@
 {
-  "name": "devsignal",
+  "name": "coval",
   "version": "1.0.0",
-  "description": "A live-window into the people, projects, and systems shaping modern engineering.",
+  "description": "COVAL — Engineering Intelligence",
   "type": "module",
   "scripts": {
     "dev": "node server.js",

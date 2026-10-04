@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
-    <meta name="description" content="A live-window into the people, projects, and systems shaping modern engineering.">
-    <meta property="og:title" content="devsignal — engineering intelligence">
-    <meta property="og:description" content="A live-window into the people, projects, and systems shaping modern engineering.">
+    <meta name="description" content="COVAL — Engineering intelligence platform for modern engineering teams and systems.">
+    <meta name="application-name" content="COVAL">
+    <meta property="og:title" content="COVAL — Engineering Intelligence">
+    <meta property="og:description" content="COVAL — Engineering intelligence platform shaping modern engineering teams, repositories, and systems.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="coval-logo.jpg">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="coval-logo.jpg" type="image/jpeg">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css?v=20261004b">
-    <title>devsignal — engineering intelligence</title>
+    <link rel="apple-touch-icon" href="coval-logo.jpg">
+    <link rel="stylesheet" href="styles.css?v=20261004c">
+    <title>COVAL — Engineering Intelligence</title>
     <script>
       (function() {
         try {
-          var saved = localStorage.getItem('devsignal_theme');
+          var saved = localStorage.getItem('coval_theme');
           var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
           var theme = saved || (prefersDark ? 'dark' : 'light');
           document.documentElement.setAttribute('data-theme', theme);
@@ -82,12 +87,12 @@
       <aside class="sidebar" id="sidebar" aria-label="Application Sidebar">
         <!-- Top: Logo, Name, Descriptor -->
         <div class="sidebar-brand-block">
-          <a class="brand" href="#overview" data-route="overview" aria-label="devsignal home">
+          <a class="brand" href="#overview" data-route="overview" aria-label="COVAL home">
             <span class="brand-mark" aria-hidden="true">
-              <svg class="icon"><use href="#i-signal"></use></svg>
+              <img src="coval-logo.jpg" alt="COVAL Solutions" class="brand-logo" width="36" height="36">
             </span>
             <div class="brand-text">
-              <span class="brand-name">devsignal<span class="brand-dot">.</span></span>
+              <span class="brand-name">COVAL</span>
               <span class="brand-desc">ENGINEERING INTELLIGENCE</span>
             </div>
           </a>
@@ -282,7 +287,7 @@
         </div>
 
         <footer class="footer">
-          <span>DEVSIGNAL <b>v1.0</b></span>
+          <span>COVAL <b>v1.0</b></span>
           <span>ENGINEERING INTELLIGENCE <i>•</i> ATLAS LABS</span>
         </footer>
       </main>

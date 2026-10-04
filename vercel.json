@@ -1,32 +1,30 @@
 {
   "version": 2,
-  "name": "devsignal",
-  "framework": "node",
+  "name": "coval",
   "builds": [
     {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
         "buildCommand": "npm run build",
-        "env": {
-          "NODE_ENV": "production"
-        }
+        "distDir": "public"
       }
     }
   ],
   "routes": [
     {
-      "src": "^\\/.*$",
-      "status": 200,
+      "src": "/(.*)",
       "headers": {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0"
-      }
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
     }
-  ],
-  "env": {
-    "PORT": "3000",
-    "HOST": ""
-  }
+  ]
 }

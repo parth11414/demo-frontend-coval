@@ -714,7 +714,7 @@
     const current = document.documentElement.getAttribute("data-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     const next = explicit || (current === "dark" ? "light" : "dark");
     document.documentElement.setAttribute("data-theme", next);
-    try { localStorage.setItem("devsignal_theme", next); } catch(e){}
+    try { localStorage.setItem("coval_theme", next); } catch(e){}
     updateThemeDisplay(next);
     showToast(`Switched to ${next} theme.`);
   }
@@ -806,6 +806,6 @@
   render();
   updateThemeDisplay(document.documentElement.getAttribute("data-theme")||"light");
   if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost" || location.hostname==="127.0.0.1")) {
-    window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(error=>console.error("Devsignal offline caching could not be enabled.",error)));
+    window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(error=>console.error("COVAL offline caching could not be enabled.",error)));
   }
 })();

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DEVSIGNAL — Premium developer-intelligence design system (light-first)
+   COVAL — Premium engineering-intelligence design system
    1. Tokens        2. Base         3. App shell      4. Primitives
    5. Overview      6. Engineering  7. Career         8. Projects
    9. Network      10. Activity    11. Profile       12. Chat
@@ -11,31 +11,32 @@
   color-scheme: light;
 
   /* colors */
-  --bg: #f6f5f2;
-  --bg-soft: #efeeea;
+  --bg: #fafafb;
+  --bg-soft: #f2f3f5;
   --surface: #ffffff;
-  --surface-2: #fbfbf9;
-  --surface-3: #f2f1ed;
-  --surface-inset: #f7f6f3;
+  --surface-2: #fcfcfd;
+  --surface-3: #f1f2f4;
+  --surface-inset: #f4f4f6;
 
-  --ink: #17171c;
-  --ink-2: #3d3d46;
-  --muted: #6c6c78;
-  --subtle: #93939e;
-  --faint: #b7b7c0;
+  --ink: #09090b;
+  --ink-2: #27272a;
+  --muted: #52525b;
+  --subtle: #71717a;
+  --faint: #a1a1aa;
 
-  --border: #e8e6e0;
-  --border-2: #dddad3;
-  --border-3: #ccc8bf;
+  --border: #e4e4e7;
+  --border-2: #d4d4d8;
+  --border-3: #a1a1aa;
 
-  --accent: #4f46e5;
-  --accent-strong: #4338ca;
-  --accent-deep: #3730a3;
-  --accent-soft: #eef0ff;
-  --accent-soft-2: #e3e6ff;
+  --accent: #09090b;
+  --accent-strong: #000000;
+  --accent-deep: #27272a;
+  --accent-soft: rgba(9, 9, 11, 0.05);
+  --accent-soft-2: rgba(9, 9, 11, 0.10);
+  --accent-ink: #ffffff;
 
-  --violet: #7c3aed;
-  --violet-soft: #f4efff;
+  --violet: #3f3f46;
+  --violet-soft: rgba(9, 9, 11, 0.05);
 
   --success: #059669;
   --success-strong: #047857;
@@ -48,15 +49,15 @@
   --warning-soft: #fdf5e9;
   --danger: #dc2626;
 
-  --track: #eceae4;
-  --scrim: rgba(23, 23, 28, 0.38);
+  --track: #e4e4e7;
+  --scrim: rgba(9, 9, 11, 0.45);
 
-  /* contribution heat scale */
-  --heat-0: #eeede8;
-  --heat-1: #d8f2e5;
-  --heat-2: #a9e5cb;
-  --heat-3: #57c9a1;
-  --heat-4: #059669;
+  /* contribution heat scale - monochrome */
+  --heat-0: #f4f4f5;
+  --heat-1: #e4e4e7;
+  --heat-2: #a1a1aa;
+  --heat-3: #52525b;
+  --heat-4: #09090b;
 
   /* language accents */
   --lang-python: #3776ab;
@@ -132,31 +133,32 @@
   color-scheme: dark;
 
   /* colors */
-  --bg: #090d16;
-  --bg-soft: #0f1524;
-  --surface: #111827;
-  --surface-2: #161f32;
-  --surface-3: #1e293b;
-  --surface-inset: #0c121e;
+  --bg: #09090b;
+  --bg-soft: #111114;
+  --surface: #18181b;
+  --surface-2: #1f1f23;
+  --surface-3: #27272a;
+  --surface-inset: #0d0d0f;
 
-  --ink: #f8fafc;
-  --ink-2: #e2e8f0;
-  --muted: #94a3b8;
-  --subtle: #64748b;
-  --faint: #334155;
+  --ink: #fafafa;
+  --ink-2: #f4f4f5;
+  --muted: #a1a1aa;
+  --subtle: #71717a;
+  --faint: #3f3f46;
 
-  --border: #1e293b;
-  --border-2: #283548;
-  --border-3: #3b4c63;
+  --border: #27272a;
+  --border-2: #3f3f46;
+  --border-3: #52525b;
 
-  --accent: #6366f1;
-  --accent-strong: #818cf8;
-  --accent-deep: #4f46e5;
-  --accent-soft: rgba(99, 102, 241, 0.12);
-  --accent-soft-2: rgba(99, 102, 241, 0.22);
+  --accent: #ffffff;
+  --accent-strong: #f4f4f5;
+  --accent-deep: #e4e4e7;
+  --accent-soft: rgba(255, 255, 255, 0.08);
+  --accent-soft-2: rgba(255, 255, 255, 0.16);
+  --accent-ink: #09090b;
 
-  --violet: #8b5cf6;
-  --violet-soft: rgba(139, 92, 246, 0.14);
+  --violet: #d4d4d8;
+  --violet-soft: rgba(255, 255, 255, 0.07);
 
   --success: #10b981;
   --success-strong: #34d399;
@@ -169,21 +171,21 @@
   --warning-soft: rgba(245, 158, 11, 0.12);
   --danger: #ef4444;
 
-  --track: #1e293b;
-  --scrim: rgba(0, 0, 0, 0.72);
+  --track: #27272a;
+  --scrim: rgba(0, 0, 0, 0.75);
 
-  /* contribution heat scale in dark */
-  --heat-0: #172033;
-  --heat-1: #064e3b;
-  --heat-2: #047857;
-  --heat-3: #10b981;
-  --heat-4: #34d399;
+  /* contribution heat scale in dark - monochrome */
+  --heat-0: #1a1a1e;
+  --heat-1: #2e2e34;
+  --heat-2: #52525b;
+  --heat-3: #a1a1aa;
+  --heat-4: #ffffff;
 
   /* shadows */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.55), 0 12px 28px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 24px 50px rgba(0, 0, 0, 0.7);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.65), 0 12px 28px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 50px rgba(0, 0, 0, 0.85);
 }
 
 /* 2. BASE ------------------------------------------------------------------ */
@@ -218,8 +220,11 @@ body::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(900px 420px at 78% -10%, rgba(79, 70, 229, 0.07), transparent 65%),
-    radial-gradient(700px 380px at 8% -12%, rgba(5, 150, 105, 0.05), transparent 60%);
+  background: radial-gradient(900px 420px at 78% -10%, rgba(0, 0, 0, 0.02), transparent 65%);
+}
+
+[data-theme="dark"] body::before {
+  background: radial-gradient(900px 420px at 78% -10%, rgba(255, 255, 255, 0.02), transparent 65%);
 }
 
 button,
@@ -368,25 +373,30 @@ a {
 }
 
 .brand-mark {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--r-md);
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
-  color: #ffffff;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
 }
 
 .brand:hover .brand-mark {
-  transform: scale(1.04);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.38);
+  transform: scale(1.02);
+  border-color: var(--border-3);
 }
 
-.brand-mark .icon {
-  font-size: 19px;
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-text {
@@ -396,23 +406,25 @@ a {
 }
 
 .brand-name {
-  font-size: var(--fs-lg);
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.05em;
   color: var(--ink);
+  text-transform: uppercase;
 }
 
 .brand-dot {
-  color: var(--accent);
+  display: none;
 }
 
 .brand-desc {
   font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--subtle);
   margin-top: 3px;
+  text-transform: uppercase;
 }
 
 .workspace-chip {
@@ -1086,9 +1098,9 @@ a {
 }
 
 .theme-switch-control.is-dark .switch-track {
-  background: #1e1b4b;
-  border-color: var(--accent);
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.32), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  background: var(--surface-3);
+  border-color: var(--border-3);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .switch-thumb {
@@ -1392,12 +1404,13 @@ a {
 
 .button-green {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink, #ffffff);
   box-shadow: var(--shadow-xs), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .button-green:hover {
   background: var(--accent-strong);
+  color: var(--accent-ink, #ffffff);
   box-shadow: var(--shadow-sm);
 }
 

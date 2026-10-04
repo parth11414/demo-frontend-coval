@@ -29,7 +29,7 @@ if (!fs.existsSync(publicDir)) {
 }
 
 const files = fs.existsSync(path.join(sourceDir, 'index.html'))
-  ? ['index.html', 'manifest.json', 'icon.svg', 'service-worker.js', 'mock-data.js', 'styles.css']
+  ? ['index.html', 'manifest.json', 'icon.svg', 'service-worker.js', 'mock-data.js', 'styles.css', 'app.js', 'coval-logo.jpg']
   : ['index.html']; // fallback: only the entry point is guaranteed
 
 for (const f of files) {

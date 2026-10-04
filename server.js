@@ -27,7 +27,7 @@ app.use((req, res) => {
 });
 
 const server = app.listen(PORT, HOST, () => {
-  console.log(`devsignal running at http://${HOST}:${PORT}`);
+  console.log(`COVAL running at http://${HOST}:${PORT}`);
 });
 
 // Graceful shutdown so time-limited Vercel previews don't leave a stale port.

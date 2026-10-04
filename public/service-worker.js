@@ -1,4 +1,4 @@
-const CACHE_NAME = 'devsignal-v4.2';
+const CACHE_NAME = 'coval-v1.0';
 
 // Bump this whenever the static assets change. Vercel deploys are immutable,
 // so a cache-bust version is the only way a service worker update propagates
