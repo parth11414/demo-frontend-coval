@@ -7258,4 +7258,19 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+/* Default state (Light mode) */
+.logo-dark { 
+  display: none; 
+}
+.logo-light { 
+  display: block; /* or inline-block, depending on your layout */
+}
+
+/* Dark mode state */
+[data-theme="dark"] .logo-light { 
+  display: none; 
+}
+[data-theme="dark"] .logo-dark { 
+  display: block; 
+}
 
