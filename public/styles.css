@@ -376,15 +376,15 @@ a {
   width: 38px;
   height: 38px;
   border-radius: var(--r-sm);
-  background: #ffffff;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-xs);
-  transition: border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+  border: none;
+  box-shadow: none;
+  transition: transform var(--t-fast) var(--ease);
 }
 
 .brand:hover .brand-mark {
@@ -885,7 +885,7 @@ a {
 }
 
 [data-theme="dark"] .topbar {
-  background: rgba(17, 24, 39, 0.85);
+  background: rgba(9, 9, 11, 0.85);
 }
 
 .topbar-left {
