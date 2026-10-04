@@ -2018,7 +2018,7 @@ a {
   z-index: 60;
   padding: 11px 16px;
   border-radius: var(--r-md);
-  background: var(--ink);
+  background: #09090b;
   color: #fff;
   font-size: var(--fs-sm);
   font-weight: 500;
