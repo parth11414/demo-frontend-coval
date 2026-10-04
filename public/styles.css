@@ -7279,3 +7279,26 @@ a {
   display: block;
 }
 
+/* COVAL — Dark mode filter/category chips */
+[data-theme="dark"] .filter-chip {
+  background: #18181b !important;
+  color: #a1a1aa !important;
+  border-color: #3f3f46 !important;
+}
+
+[data-theme="dark"] .filter-chip:hover {
+  background: #27272a !important;
+  color: #fafafa !important;
+  border-color: #52525b !important;
+}
+
+[data-theme="dark"] .filter-chip.selected {
+  background: #ffffff !important;
+  color: #09090b !important;
+  border-color: #ffffff !important;
+}
+[data-theme="dark"] .conversation-meta i {
+  background: #ffffff !important;
+  color: #09090b !important;
+  border: 1px solid #ffffff;
+}
