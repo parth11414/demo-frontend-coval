@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "name": "devsignal",
+  "framework": "none",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "npm run build",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "^\\/.*$",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      }
+    }
+  ],
+  "env": {
+    "PORT": "3000",
+    "HOST": ""
+  }
+}

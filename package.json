@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "node -e \"console.log('Build complete')\"",
-    "lint": "node --check server.js"
+    "build": "npm run build:static && node -e \"console.log('Build complete')\"",
+    "build:static": "test -d public || mkdir -p public && cp index.html manifest.json icon.svg service-worker.js mock-data.js styles.css public/",
+    "lint": "node --check server.js && node --check public/app.js"
   },
   "dependencies": {
     "express": "^5.2.1"

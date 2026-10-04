@@ -6,8 +6,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
-const HOST = '0.0.0.0';
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+const PUBLIC_DIR = path.resolve(__dirname, 'public');
 
 // Set cache headers to avoid stale preview caching
 app.use((req, res, next) => {
@@ -17,14 +18,22 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve static assets from project root
-app.use(express.static(__dirname, { etag: false, maxAge: 0 }));
+// Serve the Vercel static output directory
+app.use(express.static(PUBLIC_DIR, { etag: false, maxAge: 0 }));
 
 // Single Page Application routing fallback
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`devsignal server running at http://${HOST}:${PORT}`);
+const server = app.listen(PORT, HOST, () => {
+  console.log(`devsignal running at http://${HOST}:${PORT}`);
 });
+
+// Graceful shutdown so time-limited Vercel previews don't leave a stale port.
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down.');
+  server.close(() => process.exit(0));
+});
+
+export { app };

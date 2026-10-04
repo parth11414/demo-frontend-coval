@@ -2,7 +2,6 @@
   "name": "devsignal",
   "description": "A live-window into the people, projects, and systems shaping modern engineering.",
   "permissions": [],
-  "capabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
+  "capabilities": [],
+  "notes": "This is a static front-end demo. If you later enable backend capabilities, set the corresponding environment variables in Vercel (e.g. GEMINI_API_KEY) rather than hardcoding them here."
 }
